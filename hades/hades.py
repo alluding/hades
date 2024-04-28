@@ -210,7 +210,19 @@ class Hades(Bot):
                 delete_after=5
             )
 
+        elif isinstance(error, commands.MemberNotFound):
+            return await ctx.do(
+                _type=Flags.WARN,
+                content="I was unable to find that member, or the ID is invalid."
+            )
+
+        elif isinstance(error, commands.UserNotFound):
+            return await ctx.do(
+                _type=Flags.WARN,
+                content="I was unable to find that user, or the ID is invalid."
+            )
+
         elif isinstance(error, commands.MissingRequiredArgument):
             ...
             # Usually, I'd do ctx.send_help(). I do it for my regular Discord bots, but as of now, HadesContext doesn't have one.
-            # I will work on it in a bit, once I finish some other things.
+            # I will work on it in a bit, once I finish some other things. 
