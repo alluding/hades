@@ -44,8 +44,7 @@ class EmbedStatus(Enum):
     EMBED_NOT_FOUND = "Embed not found"
 
 
-db: Database[EmbedPayload] = Database(
-    json.load(open("./hades/api/database.json", "r")))
+db: Database[EmbedPayload] = Database(json.load(open("./hades/api/database.json", "r")))
 
 
 @app.route("/create", methods=["POST"])
