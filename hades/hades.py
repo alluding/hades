@@ -56,7 +56,14 @@ class Hades(Bot):
 
         self.start_time: datetime = datetime.utcnow()
         self.session: Session
+        
         self.ready: bool = False
+        
+        if self.config["settings"]["embed"] == "False":
+            self.embed: bool = False
+
+        if not self.config["settings"]["embed"] == "False":
+            self.embed: bool = True
 
         self.run()
 
@@ -211,20 +218,23 @@ class Hades(Bot):
                 _type=Flags.WARN,
                 content=f"This command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
                 emoji="⏳",
-                delete_after=5
+                delete_after=5,
+                embed=self.embed
             )
 
         elif isinstance(error, commands.MemberNotFound):
             return await ctx.do(
                 _type=Flags.WARN,
-                content="I was unable to find that member, or the ID is invalid."
+                content="I was unable to find that member, or the ID is invalid.",
+                embed=self.embed
             )
 
         elif isinstance(error, commands.UserNotFound):
             return await ctx.do(
                 _type=Flags.WARN,
-                content="I was unable to find that user, or the ID is invalid."
+                content="I was unable to find that user, or the ID is invalid.",
+                embed=self.embed
             )
 
         elif isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send_help()
+            return await ctx.send_help(embed=self.embed)
