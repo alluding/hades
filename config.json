@@ -1,6 +1,7 @@
 {
   "token": "",
   "settings": {
-    "prefixes": ["."]
+    "prefixes": ["."],
+    "embed": false
   }
 }
