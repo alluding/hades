@@ -188,3 +188,28 @@ class Hades(Bot):
         prefixes = list(self.config["settings"]["prefixes"])
 
         return commands.when_mentioned_or(*prefixes)(self, message)
+
+    async def on_command_error(self: Hades, ctx: HadesContext, error: Exception) -> Optional[Message]:
+        TO_IGNORE = (
+            commands.CommandNotFound,
+            commands.NotOwner,
+            commands.CheckFailure,
+            commands.DisabledCommand,
+            commands.UserInputError
+        )
+
+        if isinstance(error, TO_IGNORE):
+            return
+
+        elif isinstance(error, commands.CommandOnCooldown):
+            return await ctx.warn(
+                f"This command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
+                emoji="⏳",
+                delete_after=5
+            )
+
+        elif isinstance(error, commands.MissingRequiredArgument):
+            ... 
+            # Usually, I'd do ctx.send_help(). I do it for my regular Discord bots, but as of now, HadesContext doesn't have one.
+            # I will work on it in a bit, once I finish some other things.
+
