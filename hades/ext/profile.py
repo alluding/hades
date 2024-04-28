@@ -1,3 +1,8 @@
+"""
+I got terminated on an alt while using profile-related commands in rapid succession. 
+Be careful when using these commands quickly; make sure to keep some delay between them.
+"""
+
 from __future__ import annotations
 from typing import Dict, List
 
