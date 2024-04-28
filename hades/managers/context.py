@@ -64,7 +64,7 @@ class HadesContext(commands.Context):
                     title="Hades Self-Bot",
                     color=str(color),
                     description=embed_description,
-                    url="https://github.com/alluding/hades"
+                    redirect="https://github.com/alluding/hades"
                 ).send_to_server()["url"]
             ),
             **kwargs
@@ -76,7 +76,7 @@ class HadesContext(commands.Context):
         return await self.send(
             content=hidden(
                 Embed(
-                    url="https://github.com/alluding/hades",
+                    redirect="https://github.com/alluding/hades",
                     title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
                     description=(
                         f"{self.command.description or 'N/A'}\n\n"
