@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import (
     Dict,
     Optional,
-    Dict,
     List,
     TypeVar,
     TypedDict
@@ -48,18 +47,19 @@ db: Database[EmbedPayload] = Database(json.load(open("./hades/api/database.json"
 
 
 @app.route("/create", methods=["POST"])
-def create_embed():
+def create_embed() -> Dict[str, str]:
     _id = os.urandom(5).hex()
-
     payload = EmbedPayload(**request.json)
     db["embeds"][_id] = payload.__dict__
+    
     with open("./hades/api/database.json", "w") as f:
         json.dump(db, f)
+        
     return {"id": _id}
 
 
 @app.route("/<_id>")
-def fetch_embed(_id: str):
+def fetch_embed(_id: str) -> Response:
     embed = db["embeds"].get(_id)
     if embed:
         embed = EmbedPayload(**embed)
