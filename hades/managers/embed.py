@@ -27,8 +27,8 @@ class Embed:
         return {key: getattr(self.base_embed, key) for key in vars(self.base_embed) if getattr(self.base_embed, key) is not None}
 
     def send_to_server(self) -> Dict[str, Any]:
-        server_url = "https://127.0.0.1/create"
-        base_url = "https://127.0.0.1/"
+        server_url = "http://127.0.0.1:5000/create"
+        base_url = "http://127.0.0.1:5000/"
 
         try:
             response = requests.post(server_url, json=self.render())
