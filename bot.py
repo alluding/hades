@@ -8,6 +8,7 @@ pip_install(
     "tls_client",
     "flask",
     "requests",
+    "xxhash",
     check_exists=True
 )
 
