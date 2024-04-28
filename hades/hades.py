@@ -191,18 +191,22 @@ class Hades(Bot):
         return commands.when_mentioned_or(*prefixes)(self, message)
 
     async def on_command_error(self: Hades, ctx: HadesContext, error: Exception) -> Optional[Message]:
-        TO_IGNORE = (
-            commands.CommandNotFound,
-            commands.NotOwner,
-            commands.CheckFailure,
-            commands.DisabledCommand,
-            commands.UserInputError
-        )
+        # TO_IGNORE = (
+        #     commands.CommandNotFound,
+        #     commands.NotOwner,
+        #     commands.CheckFailure,
+        #     commands.DisabledCommand,
+        #     commands.UserInputError
+        # )
 
-        if isinstance(error, TO_IGNORE):
-            return
+        # if isinstance(error, TO_IGNORE):
+        #     return
 
-        elif isinstance(error, commands.CommandOnCooldown):
+        # I don't know if it's a discord.py-self error, but as of now, this particular piece of code
+        # affects the other checks; in return, none of these other checks are actually registered.
+        # It could also just be my code, but who knows.
+
+        if isinstance(error, commands.CommandOnCooldown):
             return await ctx.do(
                 _type=Flags.WARN,
                 content=f"This command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
