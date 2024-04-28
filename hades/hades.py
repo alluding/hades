@@ -126,8 +126,7 @@ class Hades(Bot):
         return self.logger
 
     def fetch_uptime(self: Hades) -> Tuple[int, int, int, int]:
-        delta_seconds = round(
-            (datetime.utcnow() - self.start_time).total_seconds())
+        delta_seconds = round((datetime.utcnow() - self.start_time).total_seconds())
         days, remaining = divmod(delta_seconds, 86400)
         hours, remaining = divmod(remaining, 3600)
         minutes, seconds = divmod(remaining, 60)
