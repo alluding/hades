@@ -9,6 +9,7 @@ pip_install(
     "flask",
     "requests",
     "xxhash",
+    "asyncio",
     check_exists=True
 )
 
