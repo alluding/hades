@@ -57,16 +57,18 @@ class HadesContext(commands.Context):
             
         color = FlagsColorMapping.get(_type.value, 0xffffff)
         embed_description = f"{emoji} - {content}"
-
+    
         return await self.send(
-            content=hidden(Embed(
-                title="Hades Self-Bot | 1.0",
-                color=str(color),
-                description=embed_description
-            ).send_to_server()["url"]),
+            content=hidden(
+                Embed(
+                    title="Hades Self-Bot | 1.0",
+                    color=str(color),
+                    description=embed_description
+                ).send_to_server()["url"]
+            ),
             **kwargs
         )
-
+    
     async def send_help(self) -> Message:
         example = self.command.__original_kwargs__.get("example", "")
     
@@ -81,7 +83,6 @@ class HadesContext(commands.Context):
                         f"{self.prefix}{self.command.qualified_name} {example}\n"
                         "Optional = [] | Required = ()"
                     )
-                )
+                ).send_to_server()["url"]
             )
         )
-
