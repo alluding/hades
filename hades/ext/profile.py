@@ -4,13 +4,14 @@ Be careful when using these commands quickly; make sure to keep some delay betwe
 """
 
 from __future__ import annotations
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from discord import (
     User,
     Member,
     DMChannel,
-    Message
+    Message,
+    HypeSquadHouse
 )
 from discord.ext.commands import group, command, Cog
 
@@ -20,18 +21,49 @@ from ..hades import Hades
 
 import asyncio
 
+HYPESQUAD: Dict[str, Any] = {
+    "balance": HypeSquadHouse.balance,
+    "bravery": HypeSquadHouse.bravery,
+    "brilliance": HypeSquadHouse.brilliance
+}
 
 class Profile(Cog):
     def __init__(self: Hades, bot: Hades) -> None:
         self.bot: Hades = bot
 
     @command(
+        name="hypesquad",
+        description="Change your profile's hypesquad team!",
+        example="brilliance",
+        usage="(team)"
+    )
+    async def hypesquad(
+        self: Profile, 
+        ctx: HadesContext, 
+        *, 
+        team: str
+    ) -> Message:
+        await ctx.message.delete()
+        await self.bot.user.edit(house=HYPESQUAD[team])
+
+        return await ctx.do(
+            _type=Flags.NEUTRAL,
+            emoji="🏆",
+            content=f"Hypesquad team successfully changed to: {team}"
+        )
+        
+    @command(
         name="bio",
         description="Change your profile's bio!",
         example="My new bio.",
         usage="(bio)"
     )
-    async def bio(self: Profile, ctx: HadesContext, *, bio: str) -> Message:
+    async def bio(
+        self: Profile, 
+        ctx: HadesContext, 
+        *, 
+        bio: str
+    ) -> Message:
         await ctx.message.delete()
         await self.bot.user.edit(bio=bio)
 
