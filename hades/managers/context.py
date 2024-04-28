@@ -50,31 +50,38 @@ class HadesContext(commands.Context):
         _type: Flags = Flags.NEUTRAL,
         content: str = "",
         emoji: str = "",
+        embed: bool = False,
         **kwargs
     ) -> Message:
         if not emoji:
             emoji = FlagsEmojiMapping.get(_type.value, "❓")
-            
+
         color = FlagsColorMapping.get(_type.value, 0xffffff)
         embed_description = f"{emoji} - {content}"
-    
+
+        if embed:
+            content = Embed(
+                title="Hades Self-Bot",
+                color=str(color),
+                description=embed_description,
+                redirect="https://github.com/alluding/hades"
+            ).send_to_server()["url"]
+
+        if not embed:
+            content = f"# [Hades Self-Bot](https://github.com/alluding/hades)\n{embed_description}"
+
         return await self.send(
-            content=hidden(
-                Embed(
-                    title="Hades Self-Bot",
-                    color=str(color),
-                    description=embed_description,
-                    redirect="https://github.com/alluding/hades"
-                ).send_to_server()["url"]
-            ),
+            content=content,
             **kwargs
         )
-    
-    async def send_help(self) -> Message:
+
+    async def send_help(self, embed: bool = False) -> Message:
+        await self.message.delete()
+
         example = self.command.__original_kwargs__.get("example", "")
-    
-        return await self.send(
-            content=hidden(
+
+        if embed:
+            content = hidden(
                 Embed(
                     redirect="https://github.com/alluding/hades",
                     title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
@@ -86,4 +93,14 @@ class HadesContext(commands.Context):
                     )
                 ).send_to_server()["url"]
             )
-        )
+        
+        if not embed:
+            content = f"""```go\nHades Self-Bot\n\n""" + (
+                f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}\n\n"
+                f"{self.command.description or 'N/A'}\n\n"
+                f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
+                f"{self.prefix}{self.command.qualified_name} {example}\n\n"
+                "Optional = [] | Required = ()\n"
+            ) + "```"
+
+        return await self.send(content=content)
