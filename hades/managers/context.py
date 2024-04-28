@@ -66,3 +66,22 @@ class HadesContext(commands.Context):
             ).send_to_server()["url"]),
             **kwargs
         )
+
+    async def send_help(self) -> Message:
+        example = self.command.__original_kwargs__.get("example", "")
+    
+        return await self.send(
+            content=hidden(
+                Embed(
+                    url="https://github.com/alluding/hades",
+                    title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
+                    description=(
+                        f"{self.command.description or 'N/A'}\n\n"
+                        f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
+                        f"{self.prefix}{self.command.qualified_name} {example}\n"
+                        "Optional = [] | Required = ()"
+                    )
+                )
+            )
+        )
+
