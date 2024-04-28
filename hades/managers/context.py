@@ -49,9 +49,12 @@ class HadesContext(commands.Context):
         self,
         _type: Flags = Flags.NEUTRAL,
         content: str = "",
+        emoji: str = "",
         **kwargs
     ) -> Message:
-        emoji = FlagsEmojiMapping.get(_type.value, "❓")
+        if not emoji:
+            emoji = FlagsEmojiMapping.get(_type.value, "❓")
+            
         color = FlagsColorMapping.get(_type.value, 0xffffff)
         embed_description = f"{emoji} - {content}"
 
