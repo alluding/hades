@@ -81,7 +81,7 @@ class HadesContext(commands.Context):
                     description=(
                         f"{self.command.description or 'N/A'}\n\n"
                         f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
-                        f"{self.prefix}{self.command.qualified_name} {example}\n"
+                        f"{self.prefix}{self.command.qualified_name} {example}\n\n"
                         "Optional = [] | Required = ()"
                     )
                 ).send_to_server()["url"]
