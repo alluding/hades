@@ -61,9 +61,10 @@ class HadesContext(commands.Context):
         return await self.send(
             content=hidden(
                 Embed(
-                    title="Hades Self-Bot | 1.0",
+                    title="Hades Self-Bot",
                     color=str(color),
-                    description=embed_description
+                    description=embed_description,
+                    url="https://github.com/alluding/hades"
                 ).send_to_server()["url"]
             ),
             **kwargs
