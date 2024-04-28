@@ -27,8 +27,8 @@ from pathlib import Path
 import logging
 import json
 
-from .managers.context import HadesContext
-from .managers.embed import Embed, Flags
+from .managers.context import HadesContext, Flags
+from .managers.embed import Embed
 
 if TYPE_CHECKING:
     class Config(TypedDict):
@@ -126,7 +126,8 @@ class Hades(Bot):
         return self.logger
 
     def fetch_uptime(self: Hades) -> Tuple[int, int, int, int]:
-        delta_seconds = round((datetime.utcnow() - self.start_time).total_seconds())
+        delta_seconds = round(
+            (datetime.utcnow() - self.start_time).total_seconds())
         days, remaining = divmod(delta_seconds, 86400)
         hours, remaining = divmod(remaining, 3600)
         minutes, seconds = divmod(remaining, 60)
@@ -211,7 +212,6 @@ class Hades(Bot):
             )
 
         elif isinstance(error, commands.MissingRequiredArgument):
-            ... 
+            ...
             # Usually, I'd do ctx.send_help(). I do it for my regular Discord bots, but as of now, HadesContext doesn't have one.
             # I will work on it in a bit, once I finish some other things.
-
