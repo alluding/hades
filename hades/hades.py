@@ -223,6 +223,4 @@ class Hades(Bot):
             )
 
         elif isinstance(error, commands.MissingRequiredArgument):
-            ...
-            # Usually, I'd do ctx.send_help(). I do it for my regular Discord bots, but as of now, HadesContext doesn't have one.
-            # I will work on it in a bit, once I finish some other things. 
+            return await ctx.send_help()
