@@ -28,6 +28,7 @@ import logging
 import json
 
 from .managers.context import HadesContext
+from .managers.embed import Embed, Flags
 
 if TYPE_CHECKING:
     class Config(TypedDict):
@@ -202,8 +203,9 @@ class Hades(Bot):
             return
 
         elif isinstance(error, commands.CommandOnCooldown):
-            return await ctx.warn(
-                f"This command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
+            return await ctx.do(
+                _type=Flags.WARN,
+                content=f"This command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
                 emoji="⏳",
                 delete_after=5
             )
