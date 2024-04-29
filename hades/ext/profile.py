@@ -29,13 +29,16 @@ HYPESQUAD: Dict[str, Any] = {
     "brilliance": HypeSquadHouse.brilliance
 }
 NITRO_REGEX = re.compile("(discord.com/gifts/|discordapp.com/gifts/|discord.gift/)([a-zA-Z0-9]+)")
+PRIVNOTE_REGEX = re.compile(r"https://privnote\.com/[a-zA-Z0-9]+#[a-zA-Z0-9]+")
 
 class Profile(Cog):
     def __init__(self: Hades, bot: Hades) -> None:
         self.bot: Hades = bot
+
+        self.used_notes: List[str] = []
         self.used_codes: List[str] = []
 
-    def can_snipe(self: Profile, message: Message) -> bool:
+    def can_nitro(self: Profile, message: Message) -> bool:
         sniper = self.bot.config["settings"].get("nitro_sniper", False)
         return (
             sniper
@@ -43,9 +46,23 @@ class Profile(Cog):
             and match.group(2) not in self.used_codes
         )
 
+    def can_privnote(self: Profile, message: Message) -> bool:
+        sniper = self.bot.config["settings"].get("privnote_sniper", False)
+        return (
+            sniper
+            and (match := PRIVNOTE_REGEX.search(message.content))
+            and match.group(0) not in self.used_notes
+        )
+
+    @Cog.listener("on_message")
+    async def snipe_privnote(self: Profile, message: Message) -> None:
+        if self.can_privnote(message):
+            ...
+            # I will finish this later.
+
     @Cog.listener("on_message")
     async def snipe_nitro(self: Profile, message: Message) -> None:
-        if self.can_snipe(message):
+        if self.can_nitro(message):
             if match := NITRO_REGEX.search(message.content):
                 code = match.group(2)
                 gift: Gift = await self.bot.fetch_gift(code)
