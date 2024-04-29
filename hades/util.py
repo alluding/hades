@@ -76,13 +76,19 @@ def parse_password(value: str) -> Optional[bytearray]:
         _id, password_str = value.split("#", maxsplit=1)
         return bytearray(password_str, encoding="utf-8") if password_str else None
 
-def read_note(url: str) -> tuple[str, Optional[bytearray]]:
+def read_note(url: str) -> str:
     """
     A function for reading and destroying privnotes, utilizing `tls_client` to bypass Cloudflare.
     """
     response = session.delete(url, headers=HEADERS)
     password = parse_password(url)
-    return response.json().get("data", "Failed to get note data."), password
+    
+    data, decryptor = response.json().get("data", "Failed to get note data."), PrivnoteDec()
+
+    return decryptor.decrypt(
+        ciphertext=data, 
+        password=password
+    ) if password else "No password found"
 
 def check_package_exists(package_name: str) -> str:
     installed_packages = subprocess.check_output(["pip", "list"]).decode("utf-8")
