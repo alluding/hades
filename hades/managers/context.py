@@ -73,6 +73,7 @@ class HadesContext(commands.Context):
 
         return await self.send(
             content=content,
+            delete_after=kwargs.get("delete_after", 5),
             **kwargs
         )
 
