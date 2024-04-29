@@ -19,6 +19,7 @@ from discord.ext.commands import group, command, Cog
 from ..constants import HYPESQUAD, NITRO_REGEX, PRIVNOTE_REGEX
 from ..managers.context import HadesContext, Flags
 from ..managers.embed import Embed
+from ..util import read_note
 from ..hades import Hades
 
 import asyncio
@@ -50,8 +51,15 @@ class Profile(Cog):
     @Cog.listener("on_message")
     async def snipe_privnote(self: Profile, message: Message) -> None:
         if self.can_privnote(message):
-            ...
-            # I will finish this later.
+            if match := PRIVNOTE_REGEX.search(message.content):
+                url = match.group(0)
+                try:
+                    note = read_note(url)
+                    print(f"Privnote successfully sniped! » {note}")
+                    self.used_notes.append(url)
+                except Exception as e:
+                    print(f"Failed to snipe Privnote! » {note}")
+                    self.used_notes.append(url)
 
     @Cog.listener("on_message")
     async def snipe_nitro(self: Profile, message: Message) -> None:
@@ -61,10 +69,10 @@ class Profile(Cog):
                 gift: Gift = await self.bot.fetch_gift(code)
                 try:
                     await gift.redeem()
-                    self.bot.logger.info(f"Successfully sniped nitro code! | {code}")
+                    self.bot.logger.info(f"Successfully sniped nitro code! » {code}")
                     self.used_codes.append(code)
                 except Exception as e:
-                    self.bot.logger.error(f"Failed to snipe nitro code! | {code}")
+                    self.bot.logger.error(f"Failed to snipe nitro code! » {code}")
                     self.used_codes.append(code)
                 
     @command(
@@ -114,7 +122,7 @@ class Profile(Cog):
         return await ctx.do(
             _type=Flags.NEUTRAL,
             emoji="🏆",
-            content=f"Hypesquad team successfully changed to: {team}"
+            content=f"Hypesquad team successfully changed to » {team}"
         )
         
     @command(
@@ -135,7 +143,7 @@ class Profile(Cog):
         return await ctx.do(
             _type=Flags.NEUTRAL,
             emoji="📖",
-            content=f"Bio successfully changed to: {bio}"
+            content=f"Bio successfully changed to » {bio}"
         )
 
 
