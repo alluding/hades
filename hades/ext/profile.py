@@ -74,7 +74,37 @@ class Profile(Cog):
                 except Exception as e:
                     self.bot.logger.error(f"Failed to snipe nitro code! » {code}")
                     self.used_codes.append(code)
-                
+
+    @command(
+        name="privnotesniper",
+        description="Toggle the Privnote sniper on or off.",
+        usage="(on/off)",
+        example="on"
+    )
+    async def privnotesniper(
+        self: Profile,
+        ctx: HadesContext,
+        option: str
+    ) -> Message:
+        await ctx.message.delete()
+        option = option.lower()
+        
+        if option not in ["on", "off"]:
+            return await ctx.do(
+                _type=Flags.ERROR,
+                emoji="❌",
+                content="Invalid option! Please use `on` or `off`."
+            )
+
+        sniper = option == "on"
+        self.bot.config["settings"]["privnote_sniper"] = sniper
+        
+        return await ctx.do(
+            _type=Flags.NEUTRAL,
+            emoji="✅",
+            content=f"Privnote sniper has been turned {'on' if sniper else 'off'}."
+        )
+        
     @command(
         name="nitrosniper",
         description="Toggle the Nitro sniper on or off.",
@@ -86,6 +116,7 @@ class Profile(Cog):
         ctx: HadesContext,
         option: str
     ) -> Message:
+        await ctx.message.delete()
         option = option.lower()
         
         if option not in ["on", "off"]:
