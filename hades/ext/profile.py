@@ -16,20 +16,13 @@ from discord import (
 )
 from discord.ext.commands import group, command, Cog
 
+from ..constants import HYPESQUAD, NITRO_REGEX, PRIVNOTE_REGEX
 from ..managers.context import HadesContext, Flags
 from ..managers.embed import Embed
 from ..hades import Hades
 
 import asyncio
 import re
-
-HYPESQUAD: Dict[str, Any] = {
-    "balance": HypeSquadHouse.balance,
-    "bravery": HypeSquadHouse.bravery,
-    "brilliance": HypeSquadHouse.brilliance
-}
-NITRO_REGEX = re.compile(r"(discord.com/gifts/|discordapp.com/gifts/|discord.gift/)([a-zA-Z0-9]+)")
-PRIVNOTE_REGEX = re.compile(r"https://privnote\.com/[a-zA-Z0-9]+#[a-zA-Z0-9]+")
 
 class Profile(Cog):
     def __init__(self: Hades, bot: Hades) -> None:
