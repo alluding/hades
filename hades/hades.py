@@ -58,12 +58,7 @@ class Hades(Bot):
         self.session: Session
         
         self.ready: bool = False
-        
-        if self.config["settings"]["embed"] == "False":
-            self.embed: bool = False
-
-        if not self.config["settings"]["embed"] == "False":
-            self.embed: bool = True
+        self.embed: bool = self.config["settings"]["embed"]
 
         self.run()
 
