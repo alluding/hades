@@ -2,6 +2,7 @@
   "token": "",
   "settings": {
     "prefixes": ["."],
-    "embed": "False"
+    "embed": "False",
+    "nitro_sniper": true
   }
 }
