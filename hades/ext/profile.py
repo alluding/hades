@@ -11,7 +11,8 @@ from discord import (
     Member,
     DMChannel,
     Message,
-    HypeSquadHouse
+    HypeSquadHouse,
+    Gift
 )
 from discord.ext.commands import group, command, Cog
 
@@ -20,16 +21,70 @@ from ..managers.embed import Embed
 from ..hades import Hades
 
 import asyncio
+import re
 
 HYPESQUAD: Dict[str, Any] = {
     "balance": HypeSquadHouse.balance,
     "bravery": HypeSquadHouse.bravery,
     "brilliance": HypeSquadHouse.brilliance
 }
+NITRO_REGEX = re.compile("(discord.com/gifts/|discordapp.com/gifts/|discord.gift/)([a-zA-Z0-9]+)")
 
 class Profile(Cog):
     def __init__(self: Hades, bot: Hades) -> None:
         self.bot: Hades = bot
+        self.used_codes: List[str] = []
+
+    def can_snipe(self: Profile, message: Message) -> bool:
+        sniper = self.bot.config["settings"].get("nitro_sniper", False)
+        return (
+            sniper
+            and (match := NITRO_REGEX.search(message.content))
+            and match.group(2) not in self.used_codes
+        )
+
+    @Cog.listener("on_message")
+    async def snipe_nitro(self: Profile, message: Message) -> None:
+        if self.can_snipe(message):
+            if match := NITRO_REGEX.search(message.content):
+                code = match.group(2)
+                gift: Gift = await self.bot.fetch_gift(code)
+                try:
+                    await gift.redeem()
+                    self.bot.logger.info(f"Successfully sniped nitro code! | {code}")
+                    self.used_codes.append(code)
+                except Exception as e:
+                    self.bot.logger.error(f"Failed to snipe nitro code! | {code}")
+                    self.used_codes.append(code)
+                
+    @command(
+        name="nitrosniper",
+        description="Toggle the Nitro sniper on or off.",
+        usage="(on/off)",
+        example="on"
+    )
+    async def nitrosniper(
+        self: Profile,
+        ctx: HadesContext,
+        option: str
+    ) -> Message:
+        option = option.lower()
+        
+        if option not in ["on", "off"]:
+            return await ctx.do(
+                _type=Flags.ERROR,
+                emoji="❌",
+                content="Invalid option! Please use `on` or `off`."
+            )
+
+        sniper = option == "on"
+        self.bot.config["settings"]["nitro_sniper"] = sniper
+        
+        return await ctx.do(
+            _type=Flags.NEUTRAL,
+            emoji="✅",
+            content=f"Nitro sniper has been turned {'on' if sniper else 'off'}."
+        )
 
     @command(
         name="hypesquad",
