@@ -1,0 +1,10 @@
+git+https://github.com/dolfies/discord.py-self
+typing
+typing_extensions
+tls_client
+flask
+requests
+xxhash
+asyncio
+pycryptodome
+pydantic
