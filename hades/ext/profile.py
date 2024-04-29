@@ -26,7 +26,7 @@ import asyncio
 import re
 
 class Profile(Cog):
-    def __init__(self: Hades, bot: Hades) -> None:
+    def __init__(self, bot: Hades) -> None:
         self.bot: Hades = bot
 
         self.used_notes: List[str] = []
