@@ -1,8 +1,6 @@
 from __future__ import annotations
 from typing import (
     Optional,
-    TypeVar,
-    Generic,
     Dict,
     Union,
     Any
@@ -10,9 +8,6 @@ from typing import (
 import requests
 
 from ..api.start import EmbedPayload
-
-T = TypeVar('T')
-
 
 class Embed:
     def __init__(self, title: str, description: str, **kwargs: Any):
