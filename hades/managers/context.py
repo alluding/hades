@@ -68,7 +68,7 @@ class HadesContext(commands.Context):
             ).send_to_server()["url"]
 
         if not embed:
-            content = f"# [Hades Self-Bot](https://github.com/alluding/hades)\n{embed_description}"
+            content = f"### [Hades](https://github.com/alluding/hades)\n{embed_description}"
 
         return await self.send(
             content=content,
@@ -95,7 +95,7 @@ class HadesContext(commands.Context):
             )
         
         if not embed:
-            content = f"""```go\nHades Self-Bot\n\n""" + (
+            content = f"""```go\nHades\n\n""" + (
                 f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}\n\n"
                 f"{self.command.description or 'N/A'}\n\n"
                 f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
