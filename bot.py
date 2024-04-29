@@ -10,6 +10,7 @@ pip_install(
     "requests",
     "xxhash",
     "asyncio",
+    "pycryptodome",
     check_exists=True
 )
 
