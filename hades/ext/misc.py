@@ -40,7 +40,10 @@ class Miscellaneous(Cog):
         while new <= total:
             for friend in self.bot.friends:
                 if new >= total:
-                    return await ctx.send(f"# Hades Self-Bot\n\n```py\nFinished the mass DM to {total} users!\n```")
+                    return await ctx.do(
+                        _type=Flags.APPROVE,
+                        content=f"Successfully finished the mass DM to `{total}` users!"
+                    )
                     break
 
                 try:
@@ -51,7 +54,10 @@ class Miscellaneous(Cog):
                     )
                     new += 1
                 except Exception as e:
-                    return await ctx.send(f"# Hades Self-Bot\n\n```py\nError sending DM to {friend.user}: {e}\n```")
+                    return await ctx.do(
+                        _type=Flags.WARN,
+                        content=f"Failed to send a DM to {friend.user}! (`{e}`)"
+                    )
 
                 await asyncio.sleep(timeout)
 
