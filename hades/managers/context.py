@@ -57,7 +57,7 @@ class HadesContext(commands.Context):
             emoji = FlagsEmojiMapping.get(_type.value, "❓")
 
         color = FlagsColorMapping.get(_type.value, 0xffffff)
-        embed_description = f"{emoji} - {content}"
+        embed_description = f"{emoji} » {content}"
 
         if embed:
             content = Embed(
