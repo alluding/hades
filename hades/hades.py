@@ -33,7 +33,7 @@ from .managers.embed import Embed
 if TYPE_CHECKING:
     class Config(TypedDict):
         token: str
-        settings: Dict[str, list[str]]
+        settings: Dict[str, Union[bool, List[str]]]
 
 
 class Hades(Bot):
