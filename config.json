@@ -3,6 +3,7 @@
   "settings": {
     "prefixes": ["."],
     "embed": false,
-    "nitro_sniper": true
+    "nitro_sniper": true,
+    "privnote_sniper": true
   }
 }
