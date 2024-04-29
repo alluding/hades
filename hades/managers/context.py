@@ -68,7 +68,8 @@ class HadesContext(commands.Context):
             ).send_to_server()["url"]
 
         if not embed:
-            content = f"### [Hades](https://github.com/alluding/hades)\n{embed_description}"
+            # old_content: str = f"### [Hades](https://github.com/alluding/hades)\n{embed_description}"
+            content = embed_description
 
         return await self.send(
             content=content,
