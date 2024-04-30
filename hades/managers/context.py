@@ -60,13 +60,13 @@ class HadesContext(commands.Context):
         embed_description = f"{emoji} » {content}"
 
         if embed:
-            content = Embed(
+            content = hidden(Embed(
                 title="Hades Self-Bot",
                 color=str(color),
                 description=embed_description,
                 redirect="https://github.com/alluding/hades"
-            ).send_to_server()["url"]
-
+            ).send_to_server()["url"])
+            
         if not embed:
             # old_content: str = f"### [Hades](https://github.com/alluding/hades)\n{embed_description}"
             content = embed_description
