@@ -57,7 +57,7 @@ class Miscellaneous(Cog):
                     )
                     new += 1
                 except (CaptchaRequired, Forbidden):
-                    self.bot.logger.error("Failed to send a DM to {friend.user}! (`Captcha Required / Forbidden!`)")
+                    self.bot.logger.error(f"Failed to send a DM to {friend.user}! (`Captcha Required / Forbidden!`)")
 
                 await asyncio.sleep(timeout)
 
