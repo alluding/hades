@@ -55,10 +55,10 @@ class Profile(Cog):
                 url = match.group(0)
                 try:
                     note = read_note(url)
-                    print(f"Privnote successfully sniped! » {note}")
+                    self.bot.logger.info(f"Privnote successfully sniped! » {note}")
                     self.used_notes.append(url)
                 except Exception as e:
-                    print(f"Failed to snipe Privnote! » {note}")
+                    self.bot.logger.error(f"Failed to snipe Privnote! » {note}")
                     self.used_notes.append(url)
 
     @Cog.listener("on_message")
