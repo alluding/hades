@@ -93,16 +93,18 @@ class Profile(Cog):
             return await ctx.do(
                 _type=Flags.ERROR,
                 emoji="❌",
-                content="Invalid option! Please use `on` or `off`."
+                content="Invalid option! Please use `on` or `off`.",
+                embed=self.bot.embed
             )
 
         sniper = option == "on"
         self.bot.config["settings"]["privnote_sniper"] = sniper
         
         return await ctx.do(
-            _type=Flags.NEUTRAL,
+            _type=Flags.APPROVE,
             emoji="✅",
-            content=f"Privnote sniper has been turned {'on' if sniper else 'off'}."
+            content=f"Privnote sniper has been turned {'on' if sniper else 'off'}.",
+            embed=self.bot.embed
         )
         
     @command(
@@ -123,16 +125,18 @@ class Profile(Cog):
             return await ctx.do(
                 _type=Flags.ERROR,
                 emoji="❌",
-                content="Invalid option! Please use `on` or `off`."
+                content="Invalid option! Please use `on` or `off`.",
+                embed=self.bot.embed
             )
 
         sniper = option == "on"
         self.bot.config["settings"]["nitro_sniper"] = sniper
         
         return await ctx.do(
-            _type=Flags.NEUTRAL,
+            _type=Flags.APPROVE,
             emoji="✅",
-            content=f"Nitro sniper has been turned {'on' if sniper else 'off'}."
+            content=f"Nitro sniper has been turned {'on' if sniper else 'off'}.",
+            embed=self.bot.embed
         )
 
     @command(
@@ -153,7 +157,8 @@ class Profile(Cog):
         return await ctx.do(
             _type=Flags.NEUTRAL,
             emoji="🏆",
-            content=f"Hypesquad team successfully changed to » {team}"
+            content=f"Hypesquad team successfully changed to » {team}",
+            embed=self.bot.embed
         )
         
     @command(
@@ -174,7 +179,8 @@ class Profile(Cog):
         return await ctx.do(
             _type=Flags.NEUTRAL,
             emoji="📖",
-            content=f"Bio successfully changed to » {bio}"
+            content=f"Bio successfully changed to » {bio}",
+            embed=self.bot.embed
         )
 
 
