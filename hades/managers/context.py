@@ -18,7 +18,8 @@ class Flags(Enum):
 
 FlagsColorMapping: Dict[str, Color] = {
     "APPROVE": Color.green(),
-    "NEUTRAL": Color.og_blurple(),
+    # "NEUTRAL": Color.og_blurple(),
+    "NEUTRAL": Color(800080),
     "WARN": Color.yellow(),
     "DENY": Color.red()
 }
@@ -92,7 +93,8 @@ class HadesContext(commands.Context):
                         f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
                         f"{self.prefix}{self.command.qualified_name} {example}\n\n"
                         "Optional = [] | Required = ()"
-                    )
+                    ),
+                    color=FlagsColorMapping.get("NEUTRAL", 000000)
                 ).send_to_server()["url"]
             )
         
