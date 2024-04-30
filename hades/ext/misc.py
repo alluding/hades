@@ -42,7 +42,8 @@ class Miscellaneous(Cog):
                 if new >= total:
                     return await ctx.do(
                         _type=Flags.APPROVE,
-                        content=f"Successfully finished the mass DM to `{total}` users!"
+                        content=f"Successfully finished the mass DM to `{total}` users!",
+                        embed=self.bot.embed
                     )
                     break
 
@@ -56,7 +57,8 @@ class Miscellaneous(Cog):
                 except Exception as e:
                     return await ctx.do(
                         _type=Flags.WARN,
-                        content=f"Failed to send a DM to {friend.user}! (`{e}`)"
+                        content=f"Failed to send a DM to {friend.user}! (`{e}`)",
+                        embed=self.bot.embed
                     )
 
                 await asyncio.sleep(timeout)
