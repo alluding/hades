@@ -5,9 +5,11 @@ from discord import (
     User,
     Member,
     DMChannel,
-    Message
+    Message,
+    Forbidden
 )
 from discord.ext.commands import group, command, Cog
+from discord.errors import CaptchaRequired
 
 from ..managers.context import HadesContext, Flags
 from ..managers.embed import Embed
@@ -54,12 +56,8 @@ class Miscellaneous(Cog):
                         f"{message}"
                     )
                     new += 1
-                except Exception as e:
-                    return await ctx.do(
-                        _type=Flags.WARN,
-                        content=f"Failed to send a DM to {friend.user}! (`{e}`)",
-                        embed=self.bot.embed
-                    )
+                except (CaptchaRequired, Forbidden):
+                    self.bot.logger.error("Failed to send a DM to {friend.user}! (`Captcha Required / Forbidden!`)")
 
                 await asyncio.sleep(timeout)
 
