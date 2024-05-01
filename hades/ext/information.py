@@ -41,7 +41,7 @@ class Information(Cog):
     )
     async def resolve(
         self: Information,
-        ctx: Context,
+        ctx: HadesContext,
         username: str,
         platform: Literal["ps", "xbl"]
     ) -> Message:
