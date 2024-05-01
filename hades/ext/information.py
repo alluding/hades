@@ -47,7 +47,7 @@ class Information(Cog):
     ) -> Message:
         if ctx.author.id in self.resolve_time and self.resolve_time[ctx.author.id] > asyncio.get_event_loop().time():
             return await ctx.do(
-                _type=Flags.ERROR,
+                _type=Flags.WARN,
                 content=f"Rate limited for `{round(self.resolve_time[ctx.author.id] - asyncio.get_event_loop().time())}` seconds.",
                 embed=self.bot.embed
             )
@@ -58,11 +58,18 @@ class Information(Cog):
             self.resolve_time[ctx.author.id] = asyncio.get_event_loop().time() + 1800
             
             return await ctx.do(
+                _type=Flags.WARN,
+                content=data,
+                embed=self.bot.embed
+            )
+            
+        if "User wasn't found" in data:
+            return await ctx.do(
                 _type=Flags.ERROR,
                 content=data,
                 embed=self.bot.embed
             )
-
+            
         return await ctx.do(
             _type=Flags.NEUTRAL,
             content="\n".join([f"**{key}** » `{value}`" for key, value in data.items()]),
