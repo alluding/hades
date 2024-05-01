@@ -9,18 +9,29 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-from tls_client import Session
+from tls_client import Session as _Session
+from curl_cffi.requests import Session
+
+from .constants import HEADERS, PLATFORM
+
 import subprocess
 
-session = Session(
+session: _Session = _Session(
     client_identifier="chrome_119",
     random_tls_extension_order=True
 )
 
-HEADERS: Dict[str, str] = {
-    "X-Requested-With": "XMLHttpRequest",
-}
-
+session: Session = Session(
+    impersonate="chrome119",
+    headers={
+        "User-Agent": "Mozilla/5.0 (Linux i582 x86_64) AppleWebKit/535.47 (KHTML, like Gecko) Chrome/119.0.1621.282 Safari/537",
+        "X-Requested-With": "XMLHttpRequest"
+    },
+    cookies={
+        "User": "Anonymous",
+        "ping": "true"
+    }
+)
 
 class PrivnoteDec:
     """
