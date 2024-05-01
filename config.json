@@ -2,8 +2,11 @@
   "token": "",
   "settings": {
     "prefixes": ["."],
-    "embed": false,
-    "nitro_sniper": true,
-    "privnote_sniper": true
+    "embed": true
+  },
+  "snipers": {
+    "privnote": true,
+    "nitro": true,
+    "pastebin": true
   }
 }
