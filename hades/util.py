@@ -13,7 +13,7 @@ from tls_client import Session as _Session
 from curl_cffi.requests import Session
 from bs4 import BeautifulSoup
 
-from .constants import HEADERS, PLATFORM
+from .constants import HEADERS, PLATFORM, UserInfo
 
 import subprocess
 
