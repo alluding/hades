@@ -11,6 +11,7 @@ from Crypto.Util.Padding import unpad
 
 from tls_client import Session as _Session
 from curl_cffi.requests import Session
+from bs4 import BeautifulSoup
 
 from .constants import HEADERS, PLATFORM
 
@@ -101,6 +102,30 @@ def read_note(url: str) -> str:
         password=password
     ) if password else "No password found"
 
+def parse_data(data: str) -> Union[bool, str, UserInfo]:
+    soup = BeautifulSoup(data, "html.parser")
+
+    if "You can only resolve" in data:
+        return "Rate limited for 30 minutes."
+
+    if "Seems like that user was not found" in data:
+        return f"That user wasn't found!"
+
+    if "Here's the information we found" in data:
+        rows = soup.find_all('tr')
+        user_info: UserInfo = {row.find('th').text.strip(): row.find('td').text.strip() for row in rows}
+        return user_info
+
+def resolve_user(
+    username: str,
+    platform: Literal["ps", "xbl"]
+) -> Union[bool, str, UserInfo]:
+    response = requests.post(
+        "https://xresolver.com/ajax/tool.php",
+        data={PLATFORM.get(platform, "psnUsername"): username}
+    )
+    return parse_data(response.text)
+        
 # def check_package_exists(package_name: str) -> str:
 #     installed_packages = subprocess.check_output(["pip", "list"]).decode("utf-8")
 #     return "installed" if package_name.lower() in installed_packages.lower() else "not installed"
