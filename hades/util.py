@@ -2,7 +2,7 @@
 A quick util package for Hades.
 """
 from __future__ import annotations
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, Literal
 
 import base64
 import hashlib
@@ -22,7 +22,7 @@ session: _Session = _Session(
     random_tls_extension_order=True
 )
 
-session: Session = Session(
+_session: Session = Session(
     impersonate="chrome119",
     headers={
         "User-Agent": "Mozilla/5.0 (Linux i582 x86_64) AppleWebKit/535.47 (KHTML, like Gecko) Chrome/119.0.1621.282 Safari/537",
@@ -120,7 +120,7 @@ def resolve_user(
     username: str,
     platform: Literal["ps", "xbl"]
 ) -> Union[bool, str, UserInfo]:
-    response = requests.post(
+    response = _session.post(
         "https://xresolver.com/ajax/tool.php",
         data={PLATFORM.get(platform, "psnUsername"): username}
     )
