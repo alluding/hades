@@ -22,7 +22,7 @@ NITRO_REGEX = re.compile(r"(discord.com/gifts/|discordapp.com/gifts/|discord.gif
 PRIVNOTE_REGEX = re.compile(r"https://privnote\.com/[a-zA-Z0-9]+#[a-zA-Z0-9]+")
 
 class UserInfo(TypedDict):
-    Username: str
+    Gamertag: str
     org: str
     IPAddress: str
     InternetServiceProvider: str
