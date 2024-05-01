@@ -70,11 +70,7 @@ class Information(Cog):
                 embed=self.bot.embed
             )
             
-        return await ctx.do(
-            _type=Flags.NEUTRAL,
-            content="\n".join([f"**{key}** » `{value}`" for key, value in data.items()]),
-            embed=self.bot.embed
-        )
+        return await ctx.send(content="\n".join([f"**{key}** » `{value}`" for key, value in data.items()]))
 
 
 async def setup(bot: Hades) -> None:
