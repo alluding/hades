@@ -33,7 +33,7 @@ class Profile(Cog):
         self.used_codes: List[str] = []
 
     def can_nitro(self: Profile, message: Message) -> bool:
-        sniper = self.bot.config["settings"].get("nitro_sniper", False)
+        sniper = self.bot.config["snipers"].get("nitro", False)
         return (
             sniper
             and (match := NITRO_REGEX.search(message.content))
@@ -41,7 +41,7 @@ class Profile(Cog):
         )
 
     def can_privnote(self: Profile, message: Message) -> bool:
-        sniper = self.bot.config["settings"].get("privnote_sniper", False)
+        sniper = self.bot.config["snipers"].get("privnote", False)
         return (
             sniper
             and (match := PRIVNOTE_REGEX.search(message.content))
