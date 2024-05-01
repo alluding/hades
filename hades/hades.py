@@ -34,6 +34,7 @@ if TYPE_CHECKING:
     class Config(TypedDict):
         token: str
         settings: Dict[str, Union[bool, List[str]]]
+        snipers: Dict[str, bool]
 
 
 class Hades(Bot):
