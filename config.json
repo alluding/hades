@@ -6,7 +6,6 @@
   },
   "snipers": {
     "privnote": true,
-    "nitro": true,
-    "pastebin": true
+    "nitro": true
   }
 }
