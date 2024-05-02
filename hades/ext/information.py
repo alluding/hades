@@ -67,7 +67,7 @@ class Information(Cog):
                 delete_after=12
             )
             
-        if "User wasn't found" in data:
+        if "user wasn't found" in data:
             return await ctx.do(
                 _type=Flags.ERROR,
                 content=data,
