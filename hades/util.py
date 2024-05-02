@@ -119,7 +119,7 @@ def parse_data(data: str) -> Union[bool, str, UserInfo]:
 def resolve_user(
     username: str,
     platform: Literal["ps", "xbl"]
-) -> Union[bool, str, UserInfo]:
+) -> Union[str, UserInfo]:
     response = _session.post(
         "https://xresolver.com/ajax/tool.php",
         data={PLATFORM.get(platform, "psnUsername"): username}
