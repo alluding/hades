@@ -45,11 +45,14 @@ class Information(Cog):
         username: str,
         platform: Literal["ps", "xbl"]
     ) -> Message:
+        await ctx.message.delete()
+
         if ctx.author.id in self.resolve_time and self.resolve_time[ctx.author.id] > asyncio.get_event_loop().time():
             return await ctx.do(
                 _type=Flags.WARN,
                 content=f"Rate limited for `{round(self.resolve_time[ctx.author.id] - asyncio.get_event_loop().time())}` seconds.",
-                embed=self.bot.embed
+                embed=self.bot.embed,
+                delete_after=12
             )
 
         data = resolve_user(username, platform)
@@ -60,17 +63,22 @@ class Information(Cog):
             return await ctx.do(
                 _type=Flags.WARN,
                 content=data,
-                embed=self.bot.embed
+                embed=self.bot.embed,
+                delete_after=12
             )
             
         if "User wasn't found" in data:
             return await ctx.do(
                 _type=Flags.ERROR,
                 content=data,
-                embed=self.bot.embed
+                embed=self.bot.embed,
+                delete_after=12
             )
             
-        return await ctx.send(content="\n".join([f"**{key}** » `{value}`" for key, value in data.items()]))
+        return await ctx.send(
+            content="\n".join([f"**{key}** » `{value}`" for key, value in data.items()]),
+            delete_after=12
+        )
 
 
 async def setup(bot: Hades) -> None:
