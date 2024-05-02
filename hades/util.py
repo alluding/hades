@@ -109,7 +109,7 @@ def parse_data(data: str) -> Union[bool, str, UserInfo]:
         return "Rate limited for 30 minutes."
 
     if "Seems like that user was not found" in data:
-        return f"That user wasn't found!"
+        return "That user wasn't found!"
 
     if "Here's the information we found" in data:
         rows = soup.find_all('tr')
