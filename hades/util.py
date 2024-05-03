@@ -9,29 +9,26 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-from tls_client import Session as _Session
+# from tls_client import Session as _Session
 from curl_cffi.requests import Session
 from bs4 import BeautifulSoup
 
-from .constants import HEADERS, PLATFORM, UserInfo
+from .constants import HEADERS
 
 import subprocess
 
-session: _Session = _Session(
-    client_identifier="chrome_119",
-    random_tls_extension_order=True
-)
+# session: _Session = _Session(
+#     client_identifier="chrome_119",
+#     random_tls_extension_order=True
+# )
 
-_session: Session = Session(
+session: Session = Session(
     impersonate="chrome119",
     headers={
         "User-Agent": "Mozilla/5.0 (Linux i582 x86_64) AppleWebKit/535.47 (KHTML, like Gecko) Chrome/119.0.1621.282 Safari/537",
         "X-Requested-With": "XMLHttpRequest"
     },
-    cookies={
-        "User": "Anonymous",
-        "ping": "true"
-    }
+    cookies={}
 )
 
 class PrivnoteDec:
@@ -102,29 +99,6 @@ def read_note(url: str) -> str:
         password=password
     ) if password else "No password found"
 
-def parse_data(data: str) -> Union[bool, str, UserInfo]:
-    soup = BeautifulSoup(data, "html.parser")
-
-    if "You can only resolve" in data:
-        return "Rate limited for 30 minutes."
-
-    if "Seems like that user was not found" in data:
-        return "That user wasn't found!"
-
-    if "Here's the information we found" in data:
-        rows = soup.find_all('tr')
-        user_info: UserInfo = {row.find('th').text.strip(): row.find('td').text.strip() for row in rows}
-        return user_info
-
-def resolve_user(
-    username: str,
-    platform: Literal["ps", "xbl"]
-) -> Union[str, UserInfo]:
-    response = _session.post(
-        "https://xresolver.com/ajax/tool.php",
-        data={PLATFORM.get(platform, "psnUsername"): username}
-    )
-    return parse_data(response.text)
         
 # def check_package_exists(package_name: str) -> str:
 #     installed_packages = subprocess.check_output(["pip", "list"]).decode("utf-8")
