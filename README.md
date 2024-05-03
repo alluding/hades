@@ -1,5 +1,6 @@
 # Hades
 ### An advanced multi-purpose Discord self-bot, currently a work in progress.
+#### FYI: I'm tempted to just archive this. I have NO ideas for commands, so unless people start suggesting commands, this is probably never going to be finished. :sob:
 
 # Features
 - Custom API/wrapper for embeds (since Discord removed embeds for users ages ago).
@@ -10,4 +11,3 @@ I created a mini functional API for creating embeds just in case people want to 
 
 To start the API, just open a separate terminal and run `python3 hades/api/start.py`. **Possibly**, you might need to tamper with `hades/managers/embed.py` and change the `base_url` depending on the situation. That is just what worked for **ME**.
 
-FYI: I'm tempted to just archive this. I have NO ideas for commands, so unless people start suggesting commands, this is probably never going to be finished. :sob:
