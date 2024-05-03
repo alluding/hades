@@ -9,11 +9,6 @@ HYPESQUAD: Dict[str, Any] = {
     "brilliance": HypeSquadHouse.brilliance
 }
 
-PLATFORM: Dict[str, str] = {
-    "ps": "psnUsername",
-    "xbl": "xboxUsername"
-}
-
 HEADERS: Dict[str, str] = {
     "X-Requested-With": "XMLHttpRequest",
 }
