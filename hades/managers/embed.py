@@ -1,57 +1,56 @@
-from __future__ import annotations
-from typing import (
-    Optional,
-    Dict,
-    Union,
-    Any
-)
-import requests
+from aiohttp import ClientSession
+from discord import Embed
+from urllib.parse import quote, urlencode
+import typing
 
-from ..api.start import EmbedPayload
 
-class Embed:
-    def __init__(self, title: str, description: str, **kwargs: Any):
-        self.base_embed = EmbedPayload(title=title, description=description)
-        self.create(**kwargs)
+def rgb_to_hex(rgb: typing.Tuple[int, int, int]) -> str:
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
 
-    def create(self, **kwargs: Any) -> None:
-        for key, value in kwargs.items():
-            setattr(self.base_embed, key, value)
 
-    def render(self) -> Dict[str, Any]:
-        return {key: getattr(self.base_embed, key) for key in vars(self.base_embed) if getattr(self.base_embed, key) is not None}
+async def get_embed(
+    embed: Embed,
+    provider: typing.Optional[str] = None,
+    provider_url: typing.Optional[str] = None,
+    video: typing.Optional[str] = None
+) -> str:
+    if embed.fields:
+        return  # Fields currently unsupported.
 
-    def send_to_server(self) -> Dict[str, Any]:
-        base_url = "http://127.0.0.1:5000/"
+    params: typing.Dict[str, str] = {
+        "provider": provider if provider else "",
+        "author": embed.author.name if embed.author and embed.author.name else "",
+        "title": embed.title if embed.title else "",
+        "color": rgb_to_hex(embed.colour.to_rgb()) if embed.colour else "",
+        "media_type": "none" if not embed.thumbnail else "thumbnail",
+        "desc": embed.description if embed.description else ""
+    }
+    if video:
+        params["media_type"] = "video"
 
-        try:
-            response = requests.post(base_url + "create", json=self.render())
-            if response.status_code == 200:
-                return {
-                    "url": base_url + response.json().get('id'),
-                    "message": "success"
-                }
-            else:
-                return {"error": f"Server returned status code {response.status_code} | {response.text}"}
-        except requests.exceptions.RequestException as e:
-            return {"error": f"Request error: {e}"}
+    url: str = f"https://embedl.ink/?deg=&providerurl=&{urlencode(params)}"
 
-    def __str__(self) -> str:
-        return f"Embed with title: {self.base_embed.title}"
+    async with ClientSession() as session:
+        data: typing.Dict[str, typing.Any] = {
+            "url": url.replace("https://embedl.ink/", ""),
+            "providerName": provider if provider else "",
+            "providerUrl": provider_url if provider_url else "",
+            "authorName": embed.author.name if embed.author and embed.author.name else "",
+            "authorUrl": embed.url if embed.url else "",
+            "title": embed.title if embed.title else "",
+            "mediaType": params["media_type"],
+            "mediaUrl": embed.thumbnail.url if embed.thumbnail and embed.thumbnail.url else "",
+            "mediaThumb": None,
+            "description": embed.description if embed.description else ""
+        }
+        async with session.post(
+            "https://embedl.ink/api/create",
+            data=data
+        ) as result:
+            data: typing.Dict[str, typing.Any] = await result.json()
+            code = data.get("code") if data.get("success") else "Failed to get code."
 
-    def to_dict(self) -> Dict[str, Any]:
-        return {key: getattr(self.base_embed, key) for key in vars(self.base_embed) if getattr(self.base_embed, key) is not None}
-
-    def __repr__(self) -> str:
-        return f"Embed(title='{self.base_embed.title}', description='{self.base_embed.description}')"
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Embed:
-        title = data.get("title", "")
-        description = data.get("description", "")
-        embed = cls(title, description)
-        embed.create(**data)
-        return embed
+    return f"https://embedl.ink/e/{code}"
 
 
 def hidden(value: str) -> str:
