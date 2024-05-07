@@ -2,11 +2,11 @@ from __future__ import annotations
 from typing import Dict, Any
 
 from discord.ext import commands
-from discord import Message, Color
+from discord import Message, Color, Embed
 from discord.utils import cached_property
 
 from enum import Enum, auto
-from .embed import Embed, hidden
+from .embed import rgb_to_hex, get_embed, hidden
 
 
 class Flags(Enum):
@@ -60,16 +60,17 @@ class HadesContext(commands.Context):
         color = FlagsColorMapping.get(_type.value, 0xffffff)
         embed_description = f"{emoji} » {content}"
 
+        embed: Embed = Embed(
+            title="Hades Self-Bot",
+            color=color,
+            description=embed_description
+        )
+        url: str = await get_embed(embed)
+
         if embed:
-            content = hidden(Embed(
-                title="Hades Self-Bot",
-                color=str(color),
-                description=embed_description,
-                redirect="https://github.com/alluding/hades"
-            ).send_to_server()["url"])
-            
+            content = hidden(url)
+
         if not embed:
-            # old_content: str = f"### [Hades](https://github.com/alluding/hades)\n{embed_description}"
             content = embed_description
 
         return await self.send(
@@ -82,22 +83,22 @@ class HadesContext(commands.Context):
         await self.message.delete()
 
         example = self.command.__original_kwargs__.get("example", "")
+        embed: Embed = Embed(
+            url="https://github.com/alluding/hades",
+            title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
+            description=(
+                f"{self.command.description or 'N/A'}\n\n"
+                f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
+                f"{self.prefix}{self.command.qualified_name} {example}\n\n"
+                "Optional = [] | Required = ()"
+            ),
+            color=FlagsColorMapping.get("NEUTRAL", 000000)
+        )
+        url: str = await get_embed(embed)
 
         if embed:
-            content = hidden(
-                Embed(
-                    redirect="https://github.com/alluding/hades",
-                    title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
-                    description=(
-                        f"{self.command.description or 'N/A'}\n\n"
-                        f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
-                        f"{self.prefix}{self.command.qualified_name} {example}\n\n"
-                        "Optional = [] | Required = ()"
-                    ),
-                    color=FlagsColorMapping.get("NEUTRAL", 000000)
-                ).send_to_server()["url"]
-            )
-        
+            content = hidden(url)
+
         if not embed:
             content = f"""```go\nHades\n\n""" + (
                 f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}\n\n"
