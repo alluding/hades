@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Any
+from typing import Dict, Any, TYPE_CHECKING
 
 from discord.ext import commands
 from discord import Message, Color, Embed
@@ -8,7 +8,9 @@ from discord.utils import cached_property
 from enum import Enum, auto
 from .embed import rgb_to_hex, get_embed, hidden
 
-
+if TYPE_CHECKING:
+    from ..hades import Hades
+    
 class Flags(Enum):
     APPROVE = "APPROVE"
     NEUTRAL = "NEUTRAL"
@@ -32,13 +34,18 @@ FlagsEmojiMapping: Dict[str, Any] = {
 }
 
 
-class HadesContext(commands.Context):
-    flags: Dict[str, Any] = {}
+class HadesContext(commands.Context["Hades"]):
+    bot: Hades
 
     @cached_property
-    def replied_message(self) -> Message:
-        return self.message.reference.resolved if (reference := self.message.reference) and isinstance(reference.resolved, Message) else None
-
+    def replied(self: Context) -> Optional[Message]:
+        reference = getattr(self.message, "reference", None)
+        return (
+            reference.resolved
+            if reference and isinstance(reference.resolved, Message)
+            else None
+        )
+        
     async def send(self, *args, **kwargs) -> Message:
         if kwargs.get("embed"):
             ...
