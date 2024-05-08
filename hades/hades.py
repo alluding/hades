@@ -10,6 +10,7 @@ from typing import (
     Tuple,
     Optional
 )
+from typing_extensions import override
 
 from discord.ext.commands import Bot
 from discord import (
@@ -43,14 +44,15 @@ class Hades(Bot):
     """
     config: Config = json.load(open("config.json", "r"))
 
-    def __init__(self, options: Any = None) -> Bot:
+    def __init__(self, *args: Any, **kwargs: Any) -> Bot:
         super().__init__(
+            *args,
+            **kwargs,
             command_prefix=self.get_prefix,
             description="Hades Discord Self-Bot",
             strip_after_prefix=True,
             self_bot=True,
-            help_command=None,
-            # **options
+            help_command=None
         )
 
         self.config_logger()
@@ -174,6 +176,7 @@ class Hades(Bot):
             except Exception as e:
                 self.logger.error(f"Failed to load {ext}. | {e}")
 
+    @override
     async def get_context(
         self: Hades,
         origin: Message,
