@@ -37,6 +37,7 @@ if TYPE_CHECKING:
         settings: Dict[str, Union[bool, List[str]]]
         snipers: Dict[str, bool]
 
+__all__: Tuple[str, ...] = ("Hades",)
 
 class Hades(Bot):
     """
@@ -47,7 +48,7 @@ class Hades(Bot):
     def __init__(self, *args: Any, **kwargs: Any) -> Bot:
         super().__init__(
             *args,
-            **kwargs,
+            *kwargs,
             command_prefix=self.get_prefix,
             description="Hades Discord Self-Bot",
             strip_after_prefix=True,
@@ -116,6 +117,18 @@ class Hades(Bot):
             "id": message.id
         }
 
+    @override
+    async def get_context(
+        self: Hades,
+        origin: Message,
+        *,
+        cls: Optional = None
+    ) -> HadesContext:
+        return await super().get_context(
+            origin,
+            cls=cls or HadesContext
+        )
+
     @property
     def extensions(self: Hades) -> List[str]:
         exts = [ext.parts for ext in Path('./hades/ext').glob('**/[!__]*.py')]
@@ -175,18 +188,6 @@ class Hades(Bot):
                 self.logger.info(f"Successfully loaded {ext}.")
             except Exception as e:
                 self.logger.error(f"Failed to load {ext}. | {e}")
-
-    @override
-    async def get_context(
-        self: Hades,
-        origin: Message,
-        *,
-        cls: Optional = None
-    ) -> HadesContext:
-        return await super().get_context(
-            origin,
-            cls=cls or HadesContext
-        )
 
     async def get_prefix(self: Hades, message: Message) -> Any:
         guild: Guild = message.guild
