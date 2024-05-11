@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Any, TYPE_CHECKING
+from typing import Dict, Any, Optional, TYPE_CHECKING
 from typing_extensions import override
 
 from discord.ext import commands
