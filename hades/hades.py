@@ -131,11 +131,10 @@ class Hades(Bot):
 
     @property
     def extensions(self: Hades) -> List[str]:
-        exts = [ext.parts for ext in Path('./hades/ext').glob('**/[!__]*.py')]
-        return [self._remove_suffix('.'.join(parts)) for parts in exts]
-
-    def _remove_suffix(self: Hades, text: str) -> str:
-        return text.removesuffix('.py')
+        return [
+            str(ext.with_suffix('')).replace('/', '.')
+            for ext in Path('./face/ext').glob('**/[!__]*.py')
+        ]
 
     def config_logger(self: Hades) -> logging.Logger:
         logger: logging.Logger = logging.getLogger("discord")
