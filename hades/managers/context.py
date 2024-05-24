@@ -39,7 +39,7 @@ class HadesContext(commands.Context["Hades"]):
     bot: Hades
 
     @cached_property
-    def replied(self: Context) -> Optional[Message]:
+    def replied(self) -> Optional[Message]:
         reference = getattr(self.message, "reference", None)
         return (
             reference.resolved
