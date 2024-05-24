@@ -39,6 +39,7 @@ if TYPE_CHECKING:
 
 __all__: Tuple[str, ...] = ("Hades",)
 
+
 class Hades(Bot):
     """
     An advanced Discord self-bot made in Python, relying on discord.py-self.
@@ -60,7 +61,7 @@ class Hades(Bot):
 
         self.start_time: datetime = datetime.utcnow()
         self.session: Session
-        
+
         self.ready: bool = False
         self.embed: bool = self.config["settings"]["embed"]
 
@@ -132,7 +133,7 @@ class Hades(Bot):
     @property
     def extensions(self: Hades) -> List[str]:
         return [
-            str(ext.with_suffix("")).replace("/", ".")
+            str(ext.with_suffix("")).replace("\\", ".").replace("/", ".")
             for ext in Path("./hades/ext").glob("**/[!__]*.py")
         ]
 
