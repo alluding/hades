@@ -69,14 +69,13 @@ class HadesContext(commands.Context["Hades"]):
         color: int = FlagsColorMapping.get(_type.value, 0xffffff)
         embed_description: str = f"{emoji} » {content}"
 
-        embed: Embed = Embed(
-            title="Hades Self-Bot",
-            color=color,
-            description=embed_description
-        )
-        url: str = await get_embed(embed)
-
         if embed:
+            embed: Embed = Embed(
+                title="Hades Self-Bot",
+                color=color,
+                description=embed_description
+            )
+            url: str = await get_embed(embed)
             content: str = hidden(url)
 
         if not embed:
@@ -92,20 +91,21 @@ class HadesContext(commands.Context["Hades"]):
         await self.message.delete()
 
         example: str = self.command.__original_kwargs__.get("example", "")
-        embed: Embed = Embed(
-            url="https://github.com/alluding/hades",
-            title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
-            description=(
-                f"{self.command.description or 'N/A'}\n\n"
-                f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
-                f"{self.prefix}{self.command.qualified_name} {example}\n\n"
-                "Optional = [] | Required = ()"
-            ),
-            color=FlagsColorMapping.get("NEUTRAL", 000000)
-        )
-        url: str = await get_embed(embed)
+        
 
         if embed:
+            embed: Embed = Embed(
+                url="https://github.com/alluding/hades",
+                title=(f"Group Command: {self.command.qualified_name}" if isinstance(self.command, commands.Group) else f"Command: {self.command.qualified_name}"),
+                description=(
+                    f"{self.command.description or 'N/A'}\n\n"
+                    f"{self.prefix}{self.command.qualified_name} {self.command.usage or ''}\n"
+                    f"{self.prefix}{self.command.qualified_name} {example}\n\n"
+                    "Optional = [] | Required = ()"
+                ),
+                color=FlagsColorMapping.get("NEUTRAL", 000000)
+            )
+            url: str = await get_embed(embed)
             content: str = hidden(url)
 
         if not embed:
