@@ -2,7 +2,7 @@
 A quick util package for Hades.
 """
 from __future__ import annotations
-from typing import Dict, Optional, Union, Literal
+from typing import Dict, Optional, Union, Literal, ClassVar
 
 import base64
 import hashlib
@@ -37,7 +37,7 @@ class PrivnoteDec:
 
     - The algorithm used for encryption in Privnote is fairly simple and was easy to reverse.
     """
-    PASS_CHARS: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+    PASS_CHARS: ClassVar[str] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
 
     def __init__(self) -> None:
         pass
