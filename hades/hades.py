@@ -8,7 +8,8 @@ from typing import (
     TypedDict,
     TYPE_CHECKING,
     Tuple,
-    Optional
+    Optional,
+    ClassVar
 )
 from typing_extensions import override
 
@@ -21,14 +22,15 @@ from discord import (
 )
 from discord.ext import commands
 
+from curl_cffi.requests import Session
 from datetime import datetime
-from tls_client import Session
 from pathlib import Path
 
 import logging
 import json
 
 from .managers.context import HadesContext, Flags
+from .managers.cache import ExpiringDict
 from .managers.embed import Embed
 
 if TYPE_CHECKING:
@@ -44,7 +46,9 @@ class Hades(Bot):
     """
     An advanced Discord self-bot made in Python, relying on discord.py-self.
     """
-    config: Config = json.load(open("config.json", "r"))
+
+    config: ClassVar[Config] = json.load(open("config.json", "r"))
+    ready: ClassVar[bool] = False
 
     def __init__(self, *args: Any, **kwargs: Any) -> Bot:
         super().__init__(
@@ -60,10 +64,10 @@ class Hades(Bot):
         self.config_logger()
 
         self.start_time: datetime = datetime.utcnow()
-        self.session: Session
+        self.embed: bool = False  # self.config["settings"]["embed"]
 
-        self.ready: bool = False
-        self.embed: bool = self.config["settings"]["embed"]
+        self.cache: ExpiringDict = ExpiringDict()
+        self.session: Session
 
         self.run()
 
@@ -123,7 +127,7 @@ class Hades(Bot):
         self: Hades,
         origin: Message,
         *,
-        cls: Optional = None
+        cls: Optional[type[HadesContext]] = None
     ) -> HadesContext:
         return await super().get_context(
             origin,
@@ -144,7 +148,8 @@ class Hades(Bot):
         return self.logger
 
     def fetch_uptime(self: Hades) -> Tuple[int, int, int, int]:
-        delta_seconds = round((datetime.utcnow() - self.start_time).total_seconds())
+        delta_seconds = round(
+            (datetime.utcnow() - self.start_time).total_seconds())
         days, remaining = divmod(delta_seconds, 86400)
         hours, remaining = divmod(remaining, 3600)
         minutes, seconds = divmod(remaining, 60)
@@ -162,11 +167,11 @@ class Hades(Bot):
         await self.load_extensions()
 
         if not self.ready:
-            self.ready = True
+            self.ready: bool = True
 
-        self.session = Session(
-            client_identifier="chrome_119",
-            random_tls_extension_order=True
+        self.session: Session = Session(
+            impersonate="chrome119",
+            headers={}
         )
 
     async def load_ext(
