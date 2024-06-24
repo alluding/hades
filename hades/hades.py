@@ -57,7 +57,8 @@ class Hades(Bot):
             description="Hades Discord Self-Bot",
             strip_after_prefix=True,
             self_bot=True,
-            help_command=None
+            help_command=None,
+            proxy=self.config["settings"]["proxy"],
         )
 
         self.config_logger()
