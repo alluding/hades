@@ -2,7 +2,8 @@
   "token": "",
   "settings": {
     "prefixes": ["."],
-    "embed": false
+    "embed": false,
+    "proxy": ""
   },
   "snipers": {
     "privnote": true,
