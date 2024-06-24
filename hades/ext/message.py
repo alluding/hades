@@ -19,7 +19,6 @@ from ..hades import Hades
 from xxhash import xxh32_hexdigest
 import asyncio
 
-
 class Messages(Cog):
     def __init__(self, bot: Hades) -> None:
         self.bot: Hades = bot
@@ -61,7 +60,7 @@ class Messages(Cog):
                     print(
                         f"[AUTO-REACT] Forbidden error when reacting to {origin.author.name}'s message: {str(e)}"
                     )
-
+                    
     @command(
         name="autoreply",
         description="Toggle auto-reply for someone.",
@@ -199,7 +198,6 @@ class Messages(Cog):
             content="test",
             embed=self.bot.embed
         )
-
 
 async def setup(bot: Hades) -> None:
     await bot.add_cog(Messages(bot))
