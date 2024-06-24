@@ -41,7 +41,6 @@ if TYPE_CHECKING:
 
 __all__: Tuple[str, ...] = ("Hades",)
 
-
 class Hades(Bot):
     """
     An advanced Discord self-bot made in Python, relying on discord.py-self.
