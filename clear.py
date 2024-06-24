@@ -1,7 +1,11 @@
 from typing import Union, List
 import os
 
-def clear_pycache() -> str:
+def clear_pycache() -> None:
+    """
+    Clean all pycache files.
+    """
+    
     try:
         pycache_paths: List[str] = [
             os.path.join(root, d)
