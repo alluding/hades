@@ -92,6 +92,9 @@ class Updater:
         if self.has_update():
             print("[HADES UPDATER] An update is available. Updating...")
             self.replace_files(self.fetch(self.REPO))
-
             print("[HADES UPDATER] Update completed. Restarting application...")
+            
+            self.current = self.latest()
             self.restart()
+        else:
+            print("[HADES UPDATER] No update available.")
