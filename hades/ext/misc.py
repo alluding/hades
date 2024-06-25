@@ -23,6 +23,7 @@ from ..managers.embed import Embed
 from ..constants import PACKS
 from ..hades import Hades
 
+from xxhash import xxh32_hexdigest
 import asyncio
 import random
 
@@ -47,7 +48,17 @@ class FastRoutine:
 class Miscellaneous(Cog):
     def __init__(self, bot: Hades) -> None:
         self.bot: Hades = bot
+
         self.packing: bool = False
+    
+    @Cog.listener("on_message")
+    async def check_insult(self: Miscellaneous, origin: Message) -> None:
+        if await self.bot.cache.get(
+            f"insult:{xxh32_hexdigest(str(origin.author.id))}"
+        ):
+            await origin.reply(
+                "# " + random.choice(PACKS)
+            )
 
     @command(
         name="massdm",
@@ -85,10 +96,74 @@ class Miscellaneous(Cog):
                     )
                     new += 1
                 except (CaptchaRequired, Forbidden):
-                    self.bot.logger.error(
-                        f"Failed to send a DM to {friend.user}! (`Captcha Required / Forbidden!`)")
+                    self.bot.logger.error(f"Failed to send a DM to {friend.user}! (`Captcha Required / Forbidden!`)")
 
                 await asyncio.sleep(timeout)
+
+    @group(
+        name="insult",
+        description="Insult a user until stopped.",
+        invoke_without_command=True
+    )
+    async def insult(self: Miscellaneous, ctx: HadesContext) -> None:
+        if ctx.invoked_subcommand is None:
+            await ctx.do(
+                _type=Flags.WARN,
+                content=f"Invalid insult command passed... - `{ctx.prefix}insult begin/end`",
+                embed=self.bot.embed
+            )
+        
+    @insult.command(
+        name="begin",
+        description="Begin the insulting on a user.",
+        usage="(user)",
+        example="ryu"
+    )
+    async def begin(
+        self: Miscellaneous, 
+        ctx: HadesContext,
+        *,
+        user: Union[Member, User]
+    ) -> Message:
+        await ctx.message.delete()
+
+        if await self.bot.cache.get(
+            f"insult:{xxh32_hexdigest(str(user.id))}"
+        ):
+            return await ctx.do(
+                _type=Flags.WARN,
+                emoji="❌",
+                content="This user is already being insulted!"
+            )
+
+        await self.bot.cache.sadd(
+            f"insult:{xxh32_hexdigest(str(user.id))}",
+            True
+        )
+
+        return await ctx.do(
+            _type=Flags.APPROVE,
+            emoji="✅",
+            content=f"Starting auto-insulter on **{user.name}**"
+        )
+
+    @insult.command(
+        name="end",
+        description="Stop the auto-insulting."
+    )
+    async def end(
+        self: Miscellaneous, 
+        ctx: HadesContext, 
+        user: Union[User, Member]
+    ) -> None:
+        if await self.bot.cache.get(
+            f"insult:{xxh32_hexdigest(str(user.id))}"
+        ):
+            await self.bot.cache.remove(
+                f"insult:{xxh32_hexdigest(str(user.id))}"
+            )
+
+            await ctx.message.add_reaction("👍")
 
     @group(
         name="pack",
@@ -100,7 +175,6 @@ class Miscellaneous(Cog):
                 _type=Flags.WARN,
                 content=f"Invalid pack command passed... - `{ctx.prefix}pack start/end`",
                 embed=self.bot.embed,
-                delete_after=2
             )
             
     @pack.command(
@@ -125,15 +199,19 @@ class Miscellaneous(Cog):
             pack = random.choice(PACKS)
             words = pack.split()
 
-            for word in words:
-                if not self.packing:
-                    break
+            if not self.packing:
+                break
 
-                await channel.send(word.lower())
-                await asyncio.sleep(0.05)
+            while len(words) >= 4:
+                chunk, words = words[:4], words[4:]
+
+                await channel.send("# " + " ".join(chunk).lower())
+                await asyncio.sleep(0.9)
+
+            if words:
+                await channel.send("# " + " ".join(words).lower())
 
             if self.packing:
-                await channel.send("Oh? you thought I was done??! NAHH")
                 await asyncio.sleep(1)
 
     @pack.command(
