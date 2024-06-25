@@ -67,7 +67,7 @@ class Updater:
         update_config: bool = requests.get(self.UPDATE).json().get("update_config", False)
 
         for file_info in repo_files:
-            if file_info["name"] in self.TO_IGNORE or (file_info["name"] == "config" and not update_config):
+            if file_info["name"] in self.TO_IGNORE or (file_info["name"] == "config.json" and not update_config):
                 continue
 
             path: str = base_path / file_info["path"]
