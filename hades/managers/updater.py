@@ -38,7 +38,7 @@ class Updater:
 
     @staticmethod
     def latest() -> Union[float, int]:
-        response = requests.get(self.UPDATE)
+        response = requests.get(Updater.UPDATE)
         response.raise_for_status()
 
         return float(response.json().get("version"))
