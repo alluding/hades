@@ -18,7 +18,8 @@ from discord import (
     TextChannel,
     Message,
     Guild,
-    User
+    User,
+    DMChannel
 )
 from discord.ext import commands
 
@@ -93,32 +94,49 @@ class Hades(Bot):
             if embed.type not in ("image", "video")
         ]
 
+        def get_channel(channel: Union[TextChannel, DMChannel]):
+            if isinstance(channel, TextChannel):
+                return {
+                    "id": channel.id,
+                    "name": channel.name,
+                    "position": channel.position,
+                    "category_id": channel.category_id
+                }
+            else:
+                return {
+                    "id": channel.id,
+                    "type": "DM"
+                }
+
         return {
             "guild": {
                 "id": guild.id,
                 "name": guild.name,
                 "chunked": guild.chunked,
                 "member_count": guild.member_count,
-            },
+            } if guild else None,
             "channel": {
                 "id": channel.id,
                 "name": channel.name,
                 "position": channel.position,
                 "category_id": channel.category_id
+            } if isinstance(channel, TextChannel) else {
+                "id": channel.id,
+                "type": "DM"
             },
             "author": {
                 "name": author.name,
                 "id": author.id,
                 "discriminator": author.discriminator,
                 "bot": author.bot,
-                "nick": author.nick,
+                "nick": getattr(author, "nick", None),
                 "avatar": author.avatar.url if author.avatar else None,
             },
             "attachments": attachments,
             "stickers": stickers,
             "embeds": embeds,
             "content": message.content,
-            "timestamp": message.created_at.timestamp(),
+            "timestamp": datetime.utcfromtimestamp(message.created_at.timestamp()),
             "id": message.id
         }
 
