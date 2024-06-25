@@ -28,7 +28,7 @@ class VersionModel(BaseModel):
 class Updater:
     REPO: ClassVar[str] = "https://api.github.com/repos/alluding/hades/contents/"
     RAW: ClassVar[str] = "https://raw.githubusercontent.com/alluding/hades/main/"
-    VERSION: ClassVar[str] = f"{RAW}version.txt"
+    UPDATE: ClassVar[str] = f"{RAW}update.json"
     TO_IGNORE: ClassVar[set[str]] = {"README.md"}
 
     def __init__(self, current_version: Union[float, int, str]):
@@ -38,10 +38,10 @@ class Updater:
 
     @staticmethod
     def latest() -> Union[float, int]:
-        response = requests.get(Updater.VERSION)
+        response = requests.get(self.UPDATE)
         response.raise_for_status()
 
-        return float(response.text.strip())
+        return float(response.json().get("version"))
 
     @staticmethod
     def fetch(repo_url: str) -> List[Dict[str, Any]]:
@@ -58,7 +58,7 @@ class Updater:
 
     def has_update(self) -> bool:
         return (latest := self.latest()) > self.current
-      
+
     def replace_files(
         self,
         repo_files: List[Dict[str, Any]],
@@ -66,6 +66,9 @@ class Updater:
     ) -> None:
         for file_info in repo_files:
             if file_info["name"] in self.TO_IGNORE:
+                continue
+
+            if not requests.get(self.UPDATE).json().get("update_config"):
                 continue
 
             path: str = base_path / file_info["path"]
@@ -81,7 +84,7 @@ class Updater:
                     ),
                     base_path
                 )
-          
+
     def restart(self) -> None:
         os.execv(sys.executable, ["python"] + sys.argv)
 
