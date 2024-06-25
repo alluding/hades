@@ -64,11 +64,10 @@ class Updater:
         repo_files: List[Dict[str, Any]],
         base_path: Path = Path(".")
     ) -> None:
-        for file_info in repo_files:
-            if file_info["name"] in self.TO_IGNORE:
-                continue
+        update_config: bool = requests.get(self.UPDATE).json().get("update_config", False)
 
-            if not requests.get(self.UPDATE).json().get("update_config"):
+        for file_info in repo_files:
+            if file_info["name"] in self.TO_IGNORE or (file_info["name"] == "config" and not update_config):
                 continue
 
             path: str = base_path / file_info["path"]
@@ -89,11 +88,12 @@ class Updater:
         os.execv(sys.executable, ["python"] + sys.argv)
 
     def run(self) -> None:
+        print(self.has_update())
         if self.has_update():
             print("[HADES UPDATER] An update is available. Updating...")
             self.replace_files(self.fetch(self.REPO))
             print("[HADES UPDATER] Update completed. Restarting application...")
-            
+
             self.current = self.latest()
             self.restart()
         else:
