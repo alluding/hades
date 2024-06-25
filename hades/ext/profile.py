@@ -98,7 +98,7 @@ class Profile(Cog):
             )
 
         sniper = option == "on"
-        self.bot.config["settings"]["privnote_sniper"] = sniper
+        self.bot.config["settings"]["privnote"] = sniper
         
         return await ctx.do(
             _type=Flags.APPROVE,
@@ -130,7 +130,7 @@ class Profile(Cog):
             )
 
         sniper = option == "on"
-        self.bot.config["settings"]["nitro_sniper"] = sniper
+        self.bot.config["settings"]["nitro"] = sniper
         
         return await ctx.do(
             _type=Flags.APPROVE,
