@@ -88,7 +88,6 @@ class Updater:
         os.execv(sys.executable, ["python"] + sys.argv)
 
     def run(self) -> None:
-        print(self.has_update())
         if self.has_update():
             print("[HADES UPDATER] An update is available. Updating...")
             self.replace_files(self.fetch(self.REPO))
