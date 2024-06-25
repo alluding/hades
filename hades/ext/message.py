@@ -209,7 +209,7 @@ class Messages(Cog):
         return await ctx.do(
             _type=Flags.APPROVE,
             emoji="✅",
-            content=f"Auto-reply has been turned **{check}** with `{message}` as the message." if check == "off" else f"Auto-reply has been turned **{check}**.",
+            content=f"Auto-reply has been turned **{check}** with `{message}` as the message." if check == "on" else f"Auto-reply has been turned **{check}**.",
             embed=self.bot.embed
         )
 
