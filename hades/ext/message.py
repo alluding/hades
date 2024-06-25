@@ -33,6 +33,9 @@ class Messages(Cog):
         if reply and (ref := origin.reference) and (resolved := ref.resolved) and isinstance(resolved, Message):
             if resolved.author == self.bot.user:
                 await origin.reply(reply[0])
+        
+        if reply and self.bot.user.mentioned_in(origin):
+            await origin.reply(reply[0])
 
     @Cog.listener("on_message")
     async def check_react(self: Messages, origin: Message) -> None:
