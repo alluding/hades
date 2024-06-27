@@ -9,6 +9,9 @@ from typing import (
 from pydantic import BaseModel, create_model
 import re
 
+from .context import HadesContext
+from discord.ext import commands
+
 class Parser:
     def __init__(self) -> None:
         self.flags: Dict[str, Any] = {}
@@ -42,8 +45,9 @@ class Parser:
     def _prepend(value: Any, iterator: Iterator[str]) -> Iterator[str]:
         return iter([value] + list(iterator))
 
-class FlagParser(Parser):
-    """
-    Inherit 'Parser' and use it.
-    """
-    pass
+class Flag(commands.Converter):
+    async def convert(
+        self, ctx: HadesContext, arguments: str
+    ) -> BaseModel:
+        parser: Parser = Parser()
+        return parser.parse(arguments)
